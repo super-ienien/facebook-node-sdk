@@ -11,6 +11,7 @@ import FacebookApiException from './FacebookApiException';
 var {version} = require('../package.json'),
 	debugReq = debug('fb:req'),
 	debugSig = debug('fb:sig'),
+    fbTimeDelta = 0,
 	METHODS = ['get', 'post', 'delete', 'put'],
 	toString = Object.prototype.toString,
 	has = Object.prototype.hasOwnProperty,
@@ -373,6 +374,11 @@ class Facebook {
 		debugReq(method.toUpperCase() + ' ' + uri);
 		request(requestOptions,
 			(error, response, body) => {
+				let fbTime = Date.parse(response.headers.date);
+				if (!isNaN(fbTime)) {
+                    fbTimeDelta = fbTime-Date.now();
+				}
+
 				if ( error !== null ) {
 					if ( error === Object(error) && error::has('error') ) {
 						return cb(error);
@@ -548,6 +554,16 @@ class Facebook {
 				}
 			}
 		}
+	}
+
+    /**
+     * Return the facebook server time as a timestamp
+     * Please note that as long as you have not made a request to the API the method will return your machine time
+     * @access public
+     */
+	@autobind
+	now() {
+		return fbTimeDelta+Date.now();
 	}
 
 	/**
