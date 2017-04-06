@@ -561,7 +561,6 @@ class Facebook {
      * Please note that as long as you have not made a request to the API the method will return your machine time
      * @access public
      */
-	@autobind
 	now() {
 		return fbTimeDelta+Date.now();
 	}
