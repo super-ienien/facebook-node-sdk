@@ -381,8 +381,7 @@ class Facebook {
 					return cb({error});
 				}
 
-				if (fbTimeDelta === null && response.headers.date)
-				{
+				if (fbTimeDelta === null && response && response.headers.date) {
                     let fbTime = Date.parse(response.headers.date);
                     if ( ! isNaN(fbTime) ) {
                         fbTimeDelta = fbTime-Date.now();
