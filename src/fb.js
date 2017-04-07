@@ -11,7 +11,7 @@ import FacebookApiException from './FacebookApiException';
 var {version} = require('../package.json'),
 	debugReq = debug('fb:req'),
 	debugSig = debug('fb:sig'),
-    fbTimeDelta = 0,
+	fbTimeDelta = 0,
 	METHODS = ['get', 'post', 'delete', 'put'],
 	toString = Object.prototype.toString,
 	has = Object.prototype.hasOwnProperty,
