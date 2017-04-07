@@ -11,7 +11,7 @@ import FacebookApiException from './FacebookApiException';
 var {version} = require('../package.json'),
 	debugReq = debug('fb:req'),
 	debugSig = debug('fb:sig'),
-    fbTimeDelta = 0,
+	fbTimeDelta = 0,
 	METHODS = ['get', 'post', 'delete', 'put'],
 	toString = Object.prototype.toString,
 	has = Object.prototype.hasOwnProperty,
@@ -374,11 +374,6 @@ class Facebook {
 		debugReq(method.toUpperCase() + ' ' + uri);
 		request(requestOptions,
 			(error, response, body) => {
-				let fbTime = Date.parse(response.headers.date);
-				if (!isNaN(fbTime)) {
-                    fbTimeDelta = fbTime-Date.now();
-				}
-
 				if ( error !== null ) {
 					if ( error === Object(error) && error::has('error') ) {
 						return cb(error);
@@ -386,7 +381,15 @@ class Facebook {
 					return cb({error});
 				}
 
-				if ( isOAuthRequest && response && response.statusCode === 200 &&
+				if (fbTimeDelta === null && response.headers.date)
+				{
+                    let fbTime = Date.parse(response.headers.date);
+                    if ( ! isNaN(fbTime) ) {
+                        fbTimeDelta = fbTime-Date.now();
+                    }
+				}
+
+                if ( isOAuthRequest && response && response.statusCode === 200 &&
 					response.headers && /.*text\/plain.*/.test(response.headers['content-type'])) {
 					// Parse the querystring body used before v2.3
 					cb(parseOAuthApiResponse(body));
@@ -562,7 +565,7 @@ class Facebook {
      * @access public
      */
 	now() {
-		return fbTimeDelta+Date.now();
+		return fbTimeDelta + Date.now();
 	}
 
 	/**
