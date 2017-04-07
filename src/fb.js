@@ -375,8 +375,8 @@ class Facebook {
 		request(requestOptions,
 			(error, response, body) => {
 				let fbTime = Date.parse(response.headers.date);
-				if (!isNaN(fbTime)) {
-                    fbTimeDelta = fbTime-Date.now();
+				if ( !isNaN(fbTime) ) {
+					fbTimeDelta = fbTime-Date.now();
 				}
 
 				if ( error !== null ) {
@@ -562,7 +562,7 @@ class Facebook {
      * @access public
      */
 	now() {
-		return fbTimeDelta+Date.now();
+		return fbTimeDelta + Date.now();
 	}
 
 	/**
