@@ -306,8 +306,7 @@ class Facebook {
 			parsedQuery,
 			formOptions,
 			requestOptions,
-			isOAuthRequest,
-			pool;
+			isOAuthRequest;
 
 		cb = cb || function() {};
 		if ( !params.access_token ) {
@@ -352,13 +351,16 @@ class Facebook {
 		parsedUri.search = stringifyParams(parsedQuery);
 		uri = URL.format(parsedUri);
 
-		pool = {maxSockets: this.options('maxSockets') || Number(process.env.MAX_SOCKETS) || 5};
 		requestOptions = {
 			method,
 			uri,
-			...formOptions,
-			pool
+			...formOptions
 		};
+
+		if (this.options('pool'))
+        {
+            requestOptions['pool'] = this.options('pool');
+        }
 		if ( this.options('proxy') ) {
 			requestOptions['proxy'] = this.options('proxy');
 		}
